@@ -39,7 +39,7 @@ class PresentationGenerator:
             return json.load(f)
 
     async def create_presentation(self, curated_data: Dict[str, Any]) -> str:
-        """Generate the weekly digest presentation"""
+        """Generate the weekly digest presentation with beautiful futuristic design"""
         print("🎨 Creating presentation...\n")
 
         # Generate filename
@@ -59,73 +59,129 @@ class PresentationGenerator:
         )
         print(f"  ✓ Created title slide")
 
-        # Add weekly summary slide
+        # Apply futuristic purple/blue gradient theme
+        await self.ppt.apply_theme(
+            filename=filepath,
+            theme="modern"  # Modern blue theme - clean and futuristic
+        )
+        print(f"  ✓ Applied futuristic theme")
+
+        # Add gradient background to title slide
+        await self.ppt.add_slide_background(
+            filename=filepath,
+            slide_index=0,
+            color="#5B9BD5"  # Modern blue
+        )
+
+        # Add weekly summary slide with compact formatting
         weekly_summary = curated_data.get('weekly_summary', 'Your weekly AI digest')
+
+        # Wrap summary text at 90 characters
+        wrapped_summary = self._wrap_text(weekly_summary, 90)
+
         await self.ppt.add_content_slide(
             filename=filepath,
             title="This Week in Agentic AI",
             content=[
-                weekly_summary,
+                wrapped_summary,
                 "",
-                f"📊 Curated from research papers, industry news, and community discussions",
-                f"🗓️  {date_str}"
+                "Curated from arXiv, Hacker News, and Reddit",
+                f"Generated: {date_str}"
             ]
         )
         print(f"  ✓ Added summary slide")
 
         # Add section slides
         sections = curated_data.get('sections', {})
+        section_colors = {
+            "Key Research Papers": "#9B59B6",  # Purple
+            "Industry Updates": "#3498DB",      # Blue
+            "Tools & Frameworks": "#1ABC9C",    # Turquoise
+            "Notable Discussions": "#E74C3C"    # Red
+        }
 
         for section_name, items in sections.items():
             if not items:
                 continue
 
             print(f"  ✓ Adding section: {section_name} ({len(items)} items)")
+            section_color = section_colors.get(section_name, "#5B9BD5")
 
-            # Section divider slide
-            await self.ppt.add_content_slide(
+            # Section divider slide with colored background
+            current_slide = await self.ppt.add_content_slide(
                 filename=filepath,
                 title=section_name,
-                content=[f"{len(items)} key updates"]
+                content=[
+                    f"{len(items)} key updates",
+                    "",
+                    "Swipe to explore →"
+                ]
             )
 
-            # Add each item
+            # Get the current slide index (approximate)
+            slide_count = len(items) * 2 + 3  # Rough estimate
+
+            # Add each item with compact formatting
             for idx, item in enumerate(items, 1):
-                title_text = f"{idx}. {item['title'][:80]}"
+                # Shorten title to fit (max 70 chars)
+                title_text = item['title']
+                if len(title_text) > 70:
+                    title_text = title_text[:67] + "..."
+
+                # Wrap insight text to fit nicely (max 80 chars per line)
+                insight = item.get('insight', '')
+                wrapped_insight = self._wrap_text(insight, 80)
+
+                # Shorten meta info
+                meta = item.get('meta', 'Source unknown')
+                if len(meta) > 60:
+                    meta = meta[:57] + "..."
+
+                # Shorten URL
+                url = item.get('url', '')
+                if len(url) > 50:
+                    url = url[:47] + "..."
 
                 content_lines = [
-                    item.get('insight', ''),
+                    wrapped_insight,
                     "",
-                    f"📎 {item.get('meta', 'Source unknown')}",
-                    ""
+                    f"Source: {meta}"
                 ]
 
-                # Add URL if available
-                if 'url' in item:
-                    content_lines.append(f"🔗 {item['url'][:60]}")
+                if url:
+                    content_lines.append(f"Link: {url}")
 
                 await self.ppt.add_content_slide(
                     filename=filepath,
-                    title=title_text,
+                    title=f"{idx}. {title_text}",
                     content=content_lines
                 )
 
-        # Add closing slide
+        # Add closing slide with gradient
         await self.ppt.add_content_slide(
             filename=filepath,
-            title="Keep Learning 🚀",
+            title="Stay Curious",
             content=[
-                "This digest was automatically generated",
+                "Your weekly AI digest",
+                "Automatically curated every Sunday",
                 "",
-                "Sources:",
-                "• arXiv research papers",
-                "• Hacker News discussions",
-                "• Reddit communities (r/MachineLearning, r/LocalLLaMA)",
+                "Data Sources:",
+                "  → arXiv Research Papers",
+                "  → Hacker News",
+                "  → Reddit ML Communities",
                 "",
-                f"Next digest: {self._next_sunday()}"
+                f"Next edition: {self._next_sunday()}"
             ]
         )
         print(f"  ✓ Added closing slide")
+
+        # Add footer to all slides
+        await self.ppt.add_footer(
+            filename=filepath,
+            text="AI Weekly Digest",
+            show_page_number=True
+        )
+        print(f"  ✓ Added footer with page numbers")
 
         # Save presentation
         await self.ppt.save_presentation(filepath)
@@ -134,6 +190,31 @@ class PresentationGenerator:
         print(f"📁 Location: {filepath}")
 
         return filepath
+
+    def _wrap_text(self, text: str, width: int) -> str:
+        """Wrap text to specified width"""
+        if len(text) <= width:
+            return text
+
+        words = text.split()
+        lines = []
+        current_line = []
+        current_length = 0
+
+        for word in words:
+            if current_length + len(word) + 1 <= width:
+                current_line.append(word)
+                current_length += len(word) + 1
+            else:
+                if current_line:
+                    lines.append(' '.join(current_line))
+                current_line = [word]
+                current_length = len(word)
+
+        if current_line:
+            lines.append(' '.join(current_line))
+
+        return '\n'.join(lines)
 
     def _next_sunday(self) -> str:
         """Calculate next Sunday's date"""
