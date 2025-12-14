@@ -25,6 +25,7 @@ output/
 # API Keys and secrets
 .env
 *.key
+com.aiweekly.digest.plist
 
 # OS files
 .DS_Store
