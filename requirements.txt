@@ -1,0 +1,14 @@
+# AI Weekly Digest Dependencies
+
+# Core
+pyyaml>=6.0
+anthropic>=0.39.0
+
+# News collection
+feedparser>=6.0.10
+requests>=2.31.0
+
+# PowerPoint generation (from mcp-powerpoint-server)
+python-pptx>=0.6.21
+pillow>=10.0.0
+qrcode>=7.4.2

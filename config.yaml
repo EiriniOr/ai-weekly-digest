@@ -1,0 +1,93 @@
+# AI Weekly Digest Configuration
+
+# News Sources
+sources:
+  # AI Research Papers
+  arxiv:
+    enabled: true
+    categories:
+      - cs.AI  # Artificial Intelligence
+      - cs.LG  # Machine Learning
+      - cs.CL  # Computation and Language
+    max_papers: 10
+
+  # Hacker News
+  hackernews:
+    enabled: true
+    keywords:
+      - "agentic ai"
+      - "ai agents"
+      - "llm"
+      - "claude"
+      - "gpt"
+      - "anthropic"
+      - "openai"
+    min_score: 50
+    max_items: 15
+
+  # Reddit
+  reddit:
+    enabled: true
+    subreddits:
+      - MachineLearning
+      - LocalLLaMA
+      - artificial
+    min_score: 100
+    max_items: 10
+
+# Content Curation
+curation:
+  # Focus areas for agentic AI
+  focus_topics:
+    - "autonomous agents"
+    - "multi-agent systems"
+    - "tool use"
+    - "reasoning"
+    - "planning"
+    - "memory systems"
+    - "agent frameworks"
+
+  # LLM for summarization
+  use_claude: true
+  model: "claude-sonnet-4-5-20250929"
+  max_summary_length: 150
+
+# Presentation Settings
+presentation:
+  title: "Weekly Agentic AI Digest"
+  subtitle_template: "Week of {date}"
+  output_path: "/Users/rena/Downloads"
+  filename_template: "AI_Weekly_{date}.pptx"
+
+  # Slide structure
+  sections:
+    - name: "Key Research Papers"
+      max_items: 5
+    - name: "Industry Updates"
+      max_items: 5
+    - name: "Tools & Frameworks"
+      max_items: 4
+    - name: "Notable Discussions"
+      max_items: 4
+
+# Automation
+schedule:
+  day: "Sunday"
+  time: "18:00"
+
+# Email Delivery
+email:
+  enabled: true
+  recipient: "your-email@example.com"  # Replace with your email
+  smtp_server: "smtp.gmail.com"  # Gmail by default
+  smtp_port: 587
+  sender_email: "your-email@example.com"  # Replace with your email
+  sender_password: "your-app-password"  # Use app-specific password
+  subject_template: "Your Weekly Agentic AI Digest - {date}"
+
+# GitHub Pages Deployment
+github:
+  enabled: true
+  repo: "your-username/ai-weekly-digest"  # Replace with your repo
+  branch: "gh-pages"
+  pdf_export: true  # Convert PPTX to PDF for web viewing

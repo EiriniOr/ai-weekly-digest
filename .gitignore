@@ -1,0 +1,40 @@
+# AI Weekly Digest - Git Ignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Data files (contains collected news)
+data/
+*.json
+
+# Log files
+logs/
+*.log
+
+# Output presentations
+output/
+*.pptx
+
+# API Keys and secrets
+.env
+*.key
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Keep directory structure
+!.gitkeep

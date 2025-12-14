@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Label (unique identifier) -->
+    <key>Label</key>
+    <string>com.aiweekly.digest</string>
+
+    <!-- Program to run -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/rena/ai-weekly-digest/generate_weekly_digest.py</string>
+    </array>
+
+    <!-- Working directory -->
+    <key>WorkingDirectory</key>
+    <string>/Users/rena/ai-weekly-digest</string>
+
+    <!-- Environment variables (IMPORTANT: Add your Anthropic API key) -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>ANTHROPIC_API_KEY</key>
+        <string>YOUR_API_KEY_HERE</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <!-- Schedule: Every Sunday at 6:00 PM (18:00) -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>0</integer>  <!-- 0 = Sunday -->
+        <key>Hour</key>
+        <integer>18</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!-- Logging -->
+    <key>StandardOutPath</key>
+    <string>/Users/rena/ai-weekly-digest/logs/stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/rena/ai-weekly-digest/logs/stderr.log</string>
+
+    <!-- Run on load (for testing) - set to false for production -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- Keep job alive if it exits -->
+    <key>KeepAlive</key>
+    <false/>
+</dict>
+</plist>
