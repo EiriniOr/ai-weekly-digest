@@ -28,7 +28,7 @@ class PresentationGenerator:
         self.output_dir = Path(self.config['presentation']['output_path'])
         self.ppt = PowerPointAPI()
 
-    def get_latest_curated_data(self) -> Dict[str, Any]:
+    def get_latest_curated_data(self):
         """Load the most recent curated content"""
         data_files = sorted(self.data_dir.glob("curated_*.json"), reverse=True)
 
@@ -38,7 +38,7 @@ class PresentationGenerator:
         with open(data_files[0]) as f:
             return json.load(f)
 
-    async def create_presentation(self, curated_data: Dict[str, Any]) -> str:
+    async def create_presentation(self, curated_data):
         """Generate the weekly digest presentation with beautiful futuristic design"""
         print("🎨 Creating presentation...\n")
 
@@ -59,39 +59,56 @@ class PresentationGenerator:
         )
         print(f"  ✓ Created title slide")
 
-        # Apply futuristic purple/blue gradient theme
+        # Apply futuristic gradient theme
         await self.ppt.apply_theme(
             filename=filepath,
-            theme="modern"  # Modern blue theme - clean and futuristic
+            theme="modern"
         )
-        print(f"  ✓ Applied futuristic theme")
 
         # Add gradient background to title slide
-        await self.ppt.add_slide_background(
+        await self.ppt.set_slide_background(
             filename=filepath,
-            slide_index=0,
-            color="#5B9BD5"  # Modern blue
+            color="#667eea",  # Purple gradient start
+            gradient=True
         )
+        print(f"  ✓ Applied futuristic gradient theme")
 
-        # Add weekly summary slide with compact formatting
+        # Add weekly summary slide with smaller text
         weekly_summary = curated_data.get('weekly_summary', 'Your weekly AI digest')
 
-        # Wrap summary text at 90 characters
-        wrapped_summary = self._wrap_text(weekly_summary, 90)
+        # Break summary into smaller chunks for readability
+        summary_lines = self._break_into_lines(weekly_summary, 100)
 
-        await self.ppt.add_content_slide(
+        text_blocks = []
+        for line in summary_lines:
+            text_blocks.append({
+                "text": line,
+                "font_size": 14,  # Smaller, readable font
+                "color": "#FFFFFF"
+            })
+
+        # Add metadata in smaller font
+        text_blocks.extend([
+            {"text": "", "font_size": 12},
+            {"text": "Curated from arXiv, Hacker News, and Reddit", "font_size": 11, "italic": True, "color": "#CCCCCC"},
+            {"text": f"Generated: {date_str}", "font_size": 11, "italic": True, "color": "#CCCCCC"}
+        ])
+
+        await self.ppt.format_text_slide(
             filename=filepath,
             title="This Week in Agentic AI",
-            content=[
-                wrapped_summary,
-                "",
-                "Curated from arXiv, Hacker News, and Reddit",
-                f"Generated: {date_str}"
-            ]
+            text_blocks=text_blocks
         )
-        print(f"  ✓ Added summary slide")
 
-        # Add section slides
+        # Set background gradient
+        await self.ppt.set_slide_background(
+            filename=filepath,
+            color="#3498DB",
+            gradient=True
+        )
+        print(f"  ✓ Added summary slide with gradient")
+
+        # Add section slides with colorful backgrounds
         sections = curated_data.get('sections', {})
         section_colors = {
             "Key Research Papers": "#9B59B6",  # Purple
@@ -107,71 +124,106 @@ class PresentationGenerator:
             print(f"  ✓ Adding section: {section_name} ({len(items)} items)")
             section_color = section_colors.get(section_name, "#5B9BD5")
 
-            # Section divider slide with colored background
-            current_slide = await self.ppt.add_content_slide(
+            # Section divider slide
+            await self.ppt.format_text_slide(
                 filename=filepath,
                 title=section_name,
-                content=[
-                    f"{len(items)} key updates",
-                    "",
-                    "Swipe to explore →"
+                text_blocks=[
+                    {"text": f"{len(items)} key updates", "font_size": 20, "bold": True, "color": "#FFFFFF"},
+                    {"text": "", "font_size": 12},
+                    {"text": "Swipe to explore →", "font_size": 16, "italic": True, "color": "#FFFFFF"}
                 ]
             )
 
-            # Get the current slide index (approximate)
-            slide_count = len(items) * 2 + 3  # Rough estimate
+            # Colored background for section divider
+            await self.ppt.set_slide_background(
+                filename=filepath,
+                color=section_color,
+                gradient=True
+            )
 
-            # Add each item with compact formatting
+            # Add each item with compact formatting and small fonts
             for idx, item in enumerate(items, 1):
-                # Shorten title to fit (max 70 chars)
+                # Truncate title if too long
                 title_text = item['title']
-                if len(title_text) > 70:
-                    title_text = title_text[:67] + "..."
+                if len(title_text) > 75:
+                    title_text = title_text[:72] + "..."
 
-                # Wrap insight text to fit nicely (max 80 chars per line)
+                # Get insight and break into lines
                 insight = item.get('insight', '')
-                wrapped_insight = self._wrap_text(insight, 80)
+                insight_lines = self._break_into_lines(insight, 90)
 
-                # Shorten meta info
+                # Build text blocks with small fonts
+                text_blocks = []
+
+                # Add insight lines
+                for line in insight_lines:
+                    text_blocks.append({
+                        "text": line,
+                        "font_size": 13,  # Small readable font
+                        "color": "#333333"
+                    })
+
+                # Add spacing
+                text_blocks.append({"text": "", "font_size": 10})
+
+                # Add source info in smaller font
                 meta = item.get('meta', 'Source unknown')
-                if len(meta) > 60:
-                    meta = meta[:57] + "..."
+                if len(meta) > 70:
+                    meta = meta[:67] + "..."
+                text_blocks.append({
+                    "text": f"Source: {meta}",
+                    "font_size": 10,
+                    "italic": True,
+                    "color": "#666666"
+                })
 
-                # Shorten URL
+                # Add URL if available
                 url = item.get('url', '')
-                if len(url) > 50:
-                    url = url[:47] + "..."
-
-                content_lines = [
-                    wrapped_insight,
-                    "",
-                    f"Source: {meta}"
-                ]
-
                 if url:
-                    content_lines.append(f"Link: {url}")
+                    if len(url) > 60:
+                        url = url[:57] + "..."
+                    text_blocks.append({
+                        "text": f"🔗 {url}",
+                        "font_size": 9,
+                        "color": "#3498DB"
+                    })
 
-                await self.ppt.add_content_slide(
+                # Create slide with formatted text
+                await self.ppt.format_text_slide(
                     filename=filepath,
                     title=f"{idx}. {title_text}",
-                    content=content_lines
+                    text_blocks=text_blocks
+                )
+
+                # Light background for content slides
+                await self.ppt.set_slide_background(
+                    filename=filepath,
+                    color="#F8F9FA"
                 )
 
         # Add closing slide with gradient
-        await self.ppt.add_content_slide(
+        await self.ppt.format_text_slide(
             filename=filepath,
             title="Stay Curious",
-            content=[
-                "Your weekly AI digest",
-                "Automatically curated every Sunday",
-                "",
-                "Data Sources:",
-                "  → arXiv Research Papers",
-                "  → Hacker News",
-                "  → Reddit ML Communities",
-                "",
-                f"Next edition: {self._next_sunday()}"
+            text_blocks=[
+                {"text": "Your weekly AI digest", "font_size": 18, "bold": True, "color": "#FFFFFF"},
+                {"text": "Automatically curated every Sunday", "font_size": 14, "italic": True, "color": "#EEEEEE"},
+                {"text": "", "font_size": 12},
+                {"text": "Data Sources:", "font_size": 14, "bold": True, "color": "#FFFFFF"},
+                {"text": "  → arXiv Research Papers", "font_size": 12, "color": "#EEEEEE"},
+                {"text": "  → Hacker News", "font_size": 12, "color": "#EEEEEE"},
+                {"text": "  → Reddit ML Communities", "font_size": 12, "color": "#EEEEEE"},
+                {"text": "", "font_size": 12},
+                {"text": f"Next edition: {self._next_sunday()}", "font_size": 13, "italic": True, "color": "#CCCCCC"}
             ]
+        )
+
+        # Purple gradient for closing
+        await self.ppt.set_slide_background(
+            filename=filepath,
+            color="#764ba2",
+            gradient=True
         )
         print(f"  ✓ Added closing slide")
 
@@ -191,10 +243,10 @@ class PresentationGenerator:
 
         return filepath
 
-    def _wrap_text(self, text: str, width: int) -> str:
-        """Wrap text to specified width"""
-        if len(text) <= width:
-            return text
+    def _break_into_lines(self, text: str, max_chars: int) -> list:
+        """Break text into lines of maximum length"""
+        if len(text) <= max_chars:
+            return [text]
 
         words = text.split()
         lines = []
@@ -202,9 +254,10 @@ class PresentationGenerator:
         current_length = 0
 
         for word in words:
-            if current_length + len(word) + 1 <= width:
+            word_len = len(word) + (1 if current_line else 0)
+            if current_length + word_len <= max_chars:
                 current_line.append(word)
-                current_length += len(word) + 1
+                current_length += word_len
             else:
                 if current_line:
                     lines.append(' '.join(current_line))
@@ -214,7 +267,7 @@ class PresentationGenerator:
         if current_line:
             lines.append(' '.join(current_line))
 
-        return '\n'.join(lines)
+        return lines
 
     def _next_sunday(self) -> str:
         """Calculate next Sunday's date"""
