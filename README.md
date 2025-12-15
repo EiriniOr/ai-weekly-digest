@@ -1,15 +1,20 @@
-# AI Weekly Digest Generator 🤖
+# AI Weekly Digest Generator 🤖📺
 
-Automatically generates a PowerPoint presentation every Sunday with the latest updates in **Agentic AI** - autonomous agents, multi-agent systems, tool use, planning, and reasoning.
+Automatically generates a **beautiful webpage** and **AI-narrated YouTube videos** every week with the latest updates in **Agentic AI** - autonomous agents, multi-agent systems, tool use, planning, and reasoning.
+
+🌐 **Live Site**: https://EiriniOr.github.io/ai-weekly-digest/
+📺 **YouTube Channel**: https://www.youtube.com/channel/UCUPSLoXvaMVbOIaXsOorHng
 
 ## What It Does
 
-Every Sunday at 9:00 AM, this system:
+Every Sunday at 6:00 PM UTC, this fully automated system:
 
 1. **Collects** AI news from multiple sources (arXiv, Hacker News, Reddit)
 2. **Curates** content using Claude to filter and categorize by relevance
-3. **Generates** a beautiful PowerPoint presentation with the top updates
-4. **Delivers** the presentation to your Downloads folder
+3. **Generates** a futuristic animated webpage with the top updates
+4. **Creates** AI-narrated YouTube videos with voice-over and animations
+5. **Uploads** videos automatically to YouTube
+6. **Deploys** everything to GitHub Pages
 
 ## Quick Start
 
@@ -17,23 +22,38 @@ Every Sunday at 9:00 AM, this system:
 
 ```bash
 cd /Users/rena/ai-weekly-digest
-pip3 install -r requirements.txt
+pip3 install anthropic pyyaml requests feedparser openai moviepy
+pip3 install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 ```
 
-### 2. Set Your API Key
-
-You need an Anthropic API key for content curation:
-
+**Note**: On macOS with Homebrew Python, you may need to use a virtual environment:
 ```bash
-export ANTHROPIC_API_KEY="your-api-key-here"
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
-Or add it to your `~/.zshrc` or `~/.bash_profile`:
+### 2. Set Your API Keys
+
+You need API keys for:
+- **Anthropic Claude** (content curation)
+- **OpenAI** (AI voice narration)
+- **YouTube Data API** (video uploads) - See [YOUTUBE_API_SETUP.md](YOUTUBE_API_SETUP.md)
 
 ```bash
-echo 'export ANTHROPIC_API_KEY="your-api-key-here"' >> ~/.zshrc
+export ANTHROPIC_API_KEY="your-anthropic-key"
+export OPENAI_API_KEY="your-openai-key"
+```
+
+Or add to your `~/.zshrc` or `~/.bash_profile`:
+
+```bash
+echo 'export ANTHROPIC_API_KEY="your-key"' >> ~/.zshrc
+echo 'export OPENAI_API_KEY="your-key"' >> ~/.zshrc
 source ~/.zshrc
 ```
+
+For automated uploads, follow the [YouTube API Setup Guide](YOUTUBE_API_SETUP.md).
 
 ### 3. Test It Manually
 
@@ -46,35 +66,65 @@ python3 generate_weekly_digest.py
 This will:
 - Collect news from the past week
 - Curate with Claude
-- Generate a PowerPoint presentation in your Downloads folder
+- Generate a beautiful webpage
+- Create AI-narrated video (if OpenAI key is set)
+- Upload to YouTube (if credentials configured)
+- Deploy to GitHub Pages
 
-**Expected output**: `~/Downloads/AI_Weekly_YYYY-MM-DD.pptx`
+**Expected outputs**:
+- Webpage: `output/index.html`
+- Video: `videos/ai_weekly_YYYYMMDD.mp4`
+- Live site: https://EiriniOr.github.io/ai-weekly-digest/
 
-### 4. Set Up Sunday Automation
+### 4. Set Up Automation
 
-#### Option A: Using launchd (Recommended for macOS)
+#### Option A: GitHub Actions (Recommended - Free & Cloud-based)
+
+The system is already configured to run automatically via GitHub Actions!
+
+**Setup steps:**
+
+1. **Add GitHub Secrets** (required):
+   Go to: https://github.com/EiriniOr/ai-weekly-digest/settings/secrets/actions
+
+   Add these secrets:
+   - `ANTHROPIC_API_KEY`: Your Claude API key
+   - `OPENAI_API_KEY`: Your OpenAI API key
+   - `YOUTUBE_CREDENTIALS_BASE64`: YouTube OAuth credentials (see [YOUTUBE_API_SETUP.md](YOUTUBE_API_SETUP.md))
+
+2. **That's it!** The workflow runs automatically every Sunday at 6:00 PM UTC.
+
+3. **Manual trigger** (optional):
+   - Go to: https://github.com/EiriniOr/ai-weekly-digest/actions
+   - Click "Generate Weekly AI Digest"
+   - Click "Run workflow"
+
+**What happens:**
+- Runs in GitHub's cloud (free for public repos)
+- Generates webpage + video
+- Uploads to YouTube automatically
+- Deploys to GitHub Pages
+- No local machine needed!
+
+#### Option B: Local Automation (macOS launchd)
+
+For running locally on your Mac:
 
 ```bash
-# 1. Create logs directory
-mkdir -p logs
-
-# 2. Edit the plist file and add your API key
+# 1. Edit the plist file and add your API keys
 nano com.aiweekly.digest.plist
-# Replace YOUR_API_KEY_HERE with your actual Anthropic API key
 
-# 3. Copy to LaunchAgents
+# 2. Copy to LaunchAgents
 cp com.aiweekly.digest.plist ~/Library/LaunchAgents/
 
-# 4. Load the agent
+# 3. Load the agent
 launchctl load ~/Library/LaunchAgents/com.aiweekly.digest.plist
 
-# 5. Verify it's loaded
+# 4. Verify it's loaded
 launchctl list | grep aiweekly
 ```
 
-The presentation will now be generated automatically every Sunday at 9:00 AM!
-
-#### Option B: Manual Run
+#### Option C: Manual Run
 
 If you prefer manual control, just run this command whenever you want your digest:
 
