@@ -16,6 +16,8 @@ from collect_news import AINewsCollector
 from curate_content import ContentCurator
 from generate_webpage import WebpageGenerator
 from deploy_github import deploy_to_github
+from generate_video import VideoGenerator
+from upload_youtube import YouTubeUploader
 
 async def generate_weekly_digest():
     """Run the complete weekly digest pipeline"""
@@ -42,14 +44,28 @@ async def generate_weekly_digest():
         print()
 
         # Step 3: Generate webpage
-        print("STEP 3/4: Generating beautiful webpage")
+        print("STEP 3/6: Generating beautiful webpage")
         print("-" * 60)
         generator = WebpageGenerator()
         filepath = await generator.generate()
         print()
 
-        # Step 4: Deploy to GitHub Pages
-        print("STEP 4/4: Deploying to GitHub Pages")
+        # Step 4: Generate video
+        print("STEP 4/6: Generating YouTube video")
+        print("-" * 60)
+        video_gen = VideoGenerator()
+        video_path = await video_gen.generate()
+        print()
+
+        # Step 5: Upload to YouTube (placeholder)
+        print("STEP 5/6: Preparing YouTube upload")
+        print("-" * 60)
+        youtube = YouTubeUploader()
+        youtube_uploaded = await youtube.upload_latest()
+        print()
+
+        # Step 6: Deploy to GitHub Pages
+        print("STEP 6/6: Deploying to GitHub Pages")
         print("-" * 60)
         github_deployed = await deploy_to_github(filepath)
         print()
