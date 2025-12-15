@@ -437,6 +437,7 @@ class WebpageGenerator:
             <p>🔬 Curated from arXiv, Hacker News, and Reddit</p>
             <p>Automatically generated every Sunday at 6:00 PM</p>
             <p style="margin-top: 20px;">
+                <a href="https://www.youtube.com/channel/UCUPSLoXvaMVbOIaXsOorHng" target="_blank" style="margin-right: 20px;">📺 Watch on YouTube</a>
                 <a href="https://github.com/EiriniOr/ai-weekly-digest" target="_blank">View on GitHub</a>
             </p>
         </div>
