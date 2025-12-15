@@ -22,9 +22,15 @@ logs/
 output/
 *.pptx
 
+# Videos
+videos/
+*.mp4
+*.mp3
+
 # API Keys and secrets
 .env
 *.key
+.credentials/
 com.aiweekly.digest.plist
 config.yaml
 

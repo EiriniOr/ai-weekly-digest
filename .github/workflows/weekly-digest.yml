@@ -25,6 +25,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install anthropic pyyaml requests feedparser openai moviepy
+          pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
@@ -32,6 +33,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUTUBE_CREDENTIALS_BASE64: ${{ secrets.YOUTUBE_CREDENTIALS_BASE64 }}
         run: |
           python3 generate_weekly_digest.py
 
