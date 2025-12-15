@@ -75,7 +75,7 @@ Output as JSON with sections for timing:
 Keep each section concise and engaging. Focus on WHY each item matters, not just WHAT it is."""
 
         message = self.claude_client.messages.create(
-            model="claude-sonnet-4-5-20251029",
+            model="claude-sonnet-4-5-20250929",
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
