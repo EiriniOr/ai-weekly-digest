@@ -29,6 +29,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
+      - name: Setup configuration
+        run: |
+          cp config.yaml.template config.yaml
+
       - name: Generate weekly digest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
