@@ -1,0 +1,16 @@
+Automated my AI learning with a self-updating weekly digest.
+
+**Architecture:**
+- Python aggregates from arXiv API, Hacker News API, Reddit JSON feeds
+- Claude Sonnet 4.5 curates and categorizes content into research papers, industry updates, tools & frameworks
+- Beautiful futuristic HTML/CSS webpage with animated gradients
+- GitHub Actions runs every Sunday at 6 PM (cloud-based, no local machine needed)
+- Auto-deploys to GitHub Pages via gh-pages branch
+
+**Focus:** Agentic AI - autonomous agents, multi-agent systems, LLM tooling, AI frameworks
+
+No manual curation. No weekly reminders. Just automated learning delivered every Sunday.
+
+https://eiriniOr.github.io/ai-weekly-digest
+
+#AI #Automation #Python #Claude #GitHub
