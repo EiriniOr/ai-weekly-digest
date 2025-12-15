@@ -14,8 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent / "scripts"))
 
 from collect_news import AINewsCollector
 from curate_content import ContentCurator
-from generate_presentation import PresentationGenerator
-from email_sender import send_email
+from generate_webpage import WebpageGenerator
 from deploy_github import deploy_to_github
 
 async def generate_weekly_digest():
@@ -42,21 +41,15 @@ async def generate_weekly_digest():
         curated_data = await curator.curate()
         print()
 
-        # Step 3: Generate presentation
-        print("STEP 3/5: Generating PowerPoint presentation")
+        # Step 3: Generate webpage
+        print("STEP 3/4: Generating beautiful webpage")
         print("-" * 60)
-        generator = PresentationGenerator()
+        generator = WebpageGenerator()
         filepath = await generator.generate()
         print()
 
-        # Step 4: Send email
-        print("STEP 4/5: Sending email notification")
-        print("-" * 60)
-        email_sent = await send_email(filepath)
-        print()
-
-        # Step 5: Deploy to GitHub Pages
-        print("STEP 5/5: Deploying to GitHub Pages")
+        # Step 4: Deploy to GitHub Pages
+        print("STEP 4/4: Deploying to GitHub Pages")
         print("-" * 60)
         github_deployed = await deploy_to_github(filepath)
         print()
@@ -65,13 +58,11 @@ async def generate_weekly_digest():
         print("=" * 60)
         print("  ✅ SUCCESS!")
         print("=" * 60)
-        print(f"\n  Your weekly AI digest is ready:")
+        print(f"\n  Your weekly AI digest webpage is ready:")
         print(f"  📄 {filepath}")
-        if email_sent:
-            print(f"  ✉️  Email sent!")
         if github_deployed:
-            print(f"  🌐 Deployed to GitHub Pages!")
-        print(f"\n  Open it now to review this week's agentic AI updates!")
+            print(f"  🌐 Live at: https://EiriniOr.github.io/ai-weekly-digest/")
+        print(f"\n  View your futuristic AI digest online!")
         print()
 
         return filepath
