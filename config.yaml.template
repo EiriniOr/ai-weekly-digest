@@ -75,19 +75,19 @@ schedule:
   day: "Sunday"
   time: "18:00"
 
-# Email Delivery
+# Email Delivery (disabled by default)
 email:
-  enabled: true
-  recipient: "your-email@example.com"  # Replace with your email
-  smtp_server: "smtp.gmail.com"  # Gmail by default
+  enabled: false
+  recipient: "your-email@example.com"
+  smtp_server: "smtp.gmail.com"
   smtp_port: 587
-  sender_email: "your-email@example.com"  # Replace with your email
-  sender_password: "your-app-password"  # Use app-specific password
+  sender_email: "your-email@example.com"
+  sender_password: "your-app-password-here"
   subject_template: "Your Weekly Agentic AI Digest - {date}"
 
 # GitHub Pages Deployment
 github:
   enabled: true
-  repo: "your-username/ai-weekly-digest"  # Replace with your repo
+  repo: "EiriniOr/ai-weekly-digest"
   branch: "gh-pages"
   pdf_export: true  # Convert PPTX to PDF for web viewing
