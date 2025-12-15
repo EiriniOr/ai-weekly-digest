@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Presentation Generator
-Creates a beautiful PowerPoint presentation from curated AI news
-Uses consistent futuristic background and proper font sizing
+Creates a clean PowerPoint presentation from curated AI news
+Small fonts, no graphs, 10-15 slides
 """
 
 import asyncio
@@ -39,7 +39,7 @@ class PresentationGenerator:
             return json.load(f)
 
     async def create_presentation(self, curated_data):
-        """Generate the weekly digest presentation with consistent futuristic design"""
+        """Generate clean presentation with small fonts, no graphs, 10-15 slides"""
         print("🎨 Creating presentation...\n")
 
         # Generate filename
@@ -72,23 +72,42 @@ class PresentationGenerator:
         })
         print(f"  ✓ Created title slide")
 
-        # Add weekly summary slide
+        # Add weekly summary slide - format as paragraph, not bullets
         weekly_summary = curated_data.get('weekly_summary', 'Your weekly AI digest')
-        summary_lines = self._break_into_lines(weekly_summary, 90)
 
-        summary_content = [
-            "📊 This Week's Highlights",
-            "",
-            *summary_lines,
-            "",
-            "📚 arXiv • Hacker News • Reddit",
-            f"🗓️  {date_str}"
-        ]
-
-        await call_tool("add_content_slide", {
+        # Format as single paragraph text block with smaller font
+        await call_tool("format_text", {
             "filename": filepath,
             "title": "🤖 This Week in Agentic AI",
-            "content": summary_content
+            "text_blocks": [
+                {
+                    "text": "This Week's Highlights",
+                    "font_size": 16,
+                    "bold": True,
+                    "color": "#FFFFFF"
+                },
+                {
+                    "text": weekly_summary,
+                    "font_size": 12,
+                    "color": "#FFFFFF"
+                },
+                {
+                    "text": "",
+                    "font_size": 10
+                },
+                {
+                    "text": "📚 arXiv • Hacker News • Reddit",
+                    "font_size": 10,
+                    "italic": True,
+                    "color": "#CCCCCC"
+                },
+                {
+                    "text": f"🗓️  {date_str}",
+                    "font_size": 10,
+                    "italic": True,
+                    "color": "#CCCCCC"
+                }
+            ]
         })
 
         # Soft blue gradient background
@@ -99,7 +118,7 @@ class PresentationGenerator:
         })
         print(f"  ✓ Added summary slide")
 
-        # Section colors with emojis
+        # Section colors with emojis - EXCLUDE Notable Discussions
         section_config = {
             "Key Research Papers": {
                 "color": "#9B59B6",
@@ -112,14 +131,13 @@ class PresentationGenerator:
             "Tools & Frameworks": {
                 "color": "#1ABC9C",
                 "emoji": "🛠️"
-            },
-            "Notable Discussions": {
-                "color": "#E67E22",
-                "emoji": "💬"
             }
         }
 
         sections = curated_data.get('sections', {})
+
+        # Filter out Notable Discussions
+        sections = {k: v for k, v in sections.items() if k != "Notable Discussions"}
 
         for section_name, items in sections.items():
             if not items:
@@ -129,13 +147,26 @@ class PresentationGenerator:
             config = section_config.get(section_name, {"color": "#5B9BD5", "emoji": "📌"})
 
             # Section divider slide
-            await call_tool("add_content_slide", {
+            await call_tool("format_text", {
                 "filename": filepath,
                 "title": f"{config['emoji']} {section_name}",
-                "content": [
-                    f"{len(items)} key updates this week",
-                    "",
-                    "→ Swipe to explore"
+                "text_blocks": [
+                    {
+                        "text": f"{len(items)} key updates this week",
+                        "font_size": 18,
+                        "bold": True,
+                        "color": "#FFFFFF"
+                    },
+                    {
+                        "text": "",
+                        "font_size": 12
+                    },
+                    {
+                        "text": "→ Swipe to explore",
+                        "font_size": 14,
+                        "italic": True,
+                        "color": "#FFFFFF"
+                    }
                 ]
             })
 
@@ -146,31 +177,46 @@ class PresentationGenerator:
                 "gradient": True
             })
 
-            # Add each item with consistent formatting
+            # Add each item with small fonts, formatted as paragraph
             for idx, item in enumerate(items, 1):
                 title_text = item['title']
-                if len(title_text) > 75:
-                    title_text = title_text[:72] + "..."
-
                 insight = item.get('insight', '')
-                insight_lines = self._break_into_lines(insight, 90)
-
                 meta = item.get('meta', 'Source unknown')
-                if len(meta) > 85:
-                    meta = meta[:82] + "..."
-
                 url = item.get('url', '')
-                if len(url) > 75:
-                    url = url[:72] + "..."
 
-                content_lines = insight_lines + ["", f"📍 {meta}"]
+                # Build text blocks with small fonts
+                text_blocks = [
+                    {
+                        "text": insight,
+                        "font_size": 11,
+                        "color": "#333333"
+                    },
+                    {
+                        "text": "",
+                        "font_size": 8
+                    },
+                    {
+                        "text": f"📍 {meta}",
+                        "font_size": 9,
+                        "italic": True,
+                        "color": "#666666"
+                    }
+                ]
+
                 if url:
-                    content_lines.append(f"🔗 {url}")
+                    # Shorten URL if too long
+                    display_url = url if len(url) <= 60 else url[:57] + "..."
+                    text_blocks.append({
+                        "text": f"🔗 {display_url}",
+                        "font_size": 8,
+                        "color": "#3498DB"
+                    })
 
-                await call_tool("add_content_slide", {
+                # Create slide with small title font
+                await call_tool("format_text", {
                     "filename": filepath,
                     "title": f"{idx}. {title_text}",
-                    "content": content_lines
+                    "text_blocks": text_blocks
                 })
 
                 # Soft light background for readability
@@ -181,19 +227,47 @@ class PresentationGenerator:
                 })
 
         # Closing slide
-        await call_tool("add_content_slide", {
+        await call_tool("format_text", {
             "filename": filepath,
             "title": "✨ Stay Curious",
-            "content": [
-                "Your weekly AI digest",
-                "Automatically curated every Sunday at 6 PM",
-                "",
-                "🔬 Data Sources:",
-                "  • arXiv Research Papers",
-                "  • Hacker News",
-                "  • Reddit ML Communities",
-                "",
-                f"📅 Next edition: {self._next_sunday()}"
+            "text_blocks": [
+                {
+                    "text": "Your weekly AI digest",
+                    "font_size": 16,
+                    "bold": True,
+                    "color": "#FFFFFF"
+                },
+                {
+                    "text": "Automatically curated every Sunday at 6 PM",
+                    "font_size": 12,
+                    "italic": True,
+                    "color": "#EEEEEE"
+                },
+                {
+                    "text": "",
+                    "font_size": 10
+                },
+                {
+                    "text": "🔬 Data Sources:",
+                    "font_size": 12,
+                    "bold": True,
+                    "color": "#FFFFFF"
+                },
+                {
+                    "text": "arXiv Research Papers • Hacker News • Reddit ML Communities",
+                    "font_size": 11,
+                    "color": "#EEEEEE"
+                },
+                {
+                    "text": "",
+                    "font_size": 10
+                },
+                {
+                    "text": f"📅 Next edition: {self._next_sunday()}",
+                    "font_size": 11,
+                    "italic": True,
+                    "color": "#CCCCCC"
+                }
             ]
         })
 
@@ -223,32 +297,6 @@ class PresentationGenerator:
 
         return filepath
 
-    def _break_into_lines(self, text: str, max_chars: int) -> list:
-        """Break text into lines of maximum length"""
-        if len(text) <= max_chars:
-            return [text]
-
-        words = text.split()
-        lines = []
-        current_line = []
-        current_length = 0
-
-        for word in words:
-            word_len = len(word) + (1 if current_line else 0)
-            if current_length + word_len <= max_chars:
-                current_line.append(word)
-                current_length += word_len
-            else:
-                if current_line:
-                    lines.append(' '.join(current_line))
-                current_line = [word]
-                current_length = len(word)
-
-        if current_line:
-            lines.append(' '.join(current_line))
-
-        return lines
-
     def _next_sunday(self) -> str:
         """Calculate next Sunday's date"""
         from datetime import timedelta
@@ -266,8 +314,15 @@ class PresentationGenerator:
         # Load curated data
         curated_data = self.get_latest_curated_data()
 
+        # Filter to only 3 sections (no Notable Discussions)
+        if 'sections' in curated_data:
+            curated_data['sections'] = {
+                k: v for k, v in curated_data['sections'].items()
+                if k != "Notable Discussions"
+            }
+
         total_items = sum(len(items) for items in curated_data.get('sections', {}).values())
-        print(f"📊 Loaded curated content with {total_items} items\n")
+        print(f"📊 Loaded curated content with {total_items} items (excluding discussions)\n")
 
         # Create presentation
         filepath = await self.create_presentation(curated_data)
