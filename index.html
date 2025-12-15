@@ -187,12 +187,34 @@
             font-size: 1.8rem;
         }
 
+        .archive-link {
+            text-decoration: none;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .archive-link:hover {
+            transform: translateX(5px);
+        }
+
         .archive-item {
             background: rgba(50, 50, 70, 0.5);
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
             border-left: 3px solid #667eea;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .archive-link .archive-item:hover {
+            background: rgba(70, 70, 90, 0.7);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .archive-item.current-week {
+            border-left: 3px solid #4A90E2;
+            cursor: default;
         }
 
         .archive-date {
@@ -415,18 +437,12 @@
         <div class="archive">
             <h2>📅 Recent Editions</h2>
             
-            <div class="archive-item">
-                <div class="archive-date">December 15, 2025</div>
-                <div class="archive-summary">This week highlighted the tension between advancing agent capabilities and real-world safety, with OpenAI introducing modular 'skills' and Claude CLI ...</div>
-                <div class="archive-stats">18 items</div>
-            </div>
-            
-            <div class="archive-item">
-                <div class="archive-date">December 14, 2025</div>
-                <div class="archive-summary">This week saw major advances in interactive reasoning with training-free asynchronous thinking capabilities and OpenAI's introduction of 'skills' for ...</div>
-                <div class="archive-stats">18 items</div>
-            </div>
-            
+                <div class="archive-item current-week">
+                    <div class="archive-date">December 15, 2025 (Current)</div>
+                    <div class="archive-summary">This week highlighted the tension between advancing agent capabilities and real-world safety, with OpenAI introducing modular 'skills' and Claude CLI ...</div>
+                    <div class="archive-stats">18 items</div>
+                </div>
+                
         </div>
 
         <!-- Footer -->
