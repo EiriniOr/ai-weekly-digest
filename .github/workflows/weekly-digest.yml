@@ -46,6 +46,17 @@ jobs:
         run: |
           python3 generate_weekly_digest.py
 
+      - name: Upload video artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: weekly-video
+          path: |
+            videos/*.mp4
+            videos/*.mp3
+            videos/*.json
+          retention-days: 30
+
       - name: Deploy to GitHub Pages
         run: |
           cd output
