@@ -458,6 +458,9 @@ class WebpageGenerator:
                 <a href="https://www.youtube.com/channel/UCUPSLoXvaMVbOIaXsOorHng" target="_blank" style="margin-right: 20px;">📺 Watch on YouTube</a>
                 <a href="https://github.com/EiriniOr/ai-weekly-digest" target="_blank">View on GitHub</a>
             </p>
+            <p style="margin-top: 30px; opacity: 0.6; font-size: 14px;">
+                Created by <a href="https://github.com/EiriniOr" target="_blank" style="color: #9B59B6; text-decoration: none;">Eirini Ornithopoulou</a>
+            </p>
         </div>
     </div>
 </body>
