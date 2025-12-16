@@ -32,7 +32,7 @@ jobs:
           pip install anthropic pyyaml requests feedparser openai moviepy
           pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg imagemagick
 
       - name: Setup configuration
         run: |
