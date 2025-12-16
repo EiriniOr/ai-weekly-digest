@@ -42,7 +42,7 @@ class WebpageGenerator:
         """Generate beautiful futuristic webpage"""
         print("🎨 Creating webpage...\n")
 
-        date_str = datetime.now().strftime('%Y-%m-%d')
+        date_str = datetime.now().strftime('%Y%m%d')
         week_str = datetime.now().strftime('%B %d, %Y')
 
         # Get recent digests for archive
