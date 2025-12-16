@@ -29,10 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic pyyaml requests feedparser openai moviepy
-          pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg imagemagick
+          pip install anthropic pyyaml requests feedparser openai
 
       - name: Setup configuration
         run: |
@@ -46,19 +43,22 @@ jobs:
         run: |
           python3 generate_weekly_digest.py
 
-      - name: Upload video artifacts
+      - name: Upload audio artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: weekly-video
+          name: weekly-audio
           path: |
-            videos/*.mp4
-            videos/*.mp3
-            videos/*.json
+            audio/*.mp3
+            audio/*.json
           retention-days: 30
 
       - name: Deploy to GitHub Pages
         run: |
+          # Copy audio files to output directory
+          mkdir -p output/audio
+          cp -r audio/*.mp3 output/audio/ 2>/dev/null || true
+
           cd output
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"

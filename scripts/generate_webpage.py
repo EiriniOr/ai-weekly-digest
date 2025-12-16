@@ -423,22 +423,18 @@ class WebpageGenerator:
             <p>{curated_data.get('weekly_summary', 'Your weekly AI digest')}</p>
         </div>
 
-        <!-- YouTube Video -->
-        <div class="video-container" style="margin: 40px 0; text-align: center;">
-            <h2 style="margin-bottom: 20px;">📺 Watch This Week's Video</h2>
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 800px; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
-                <iframe
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 12px;"
-                    src="https://www.youtube.com/embed?listType=playlist&list=UUUPSLoXvaMVbOIaXsOorHng"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+        <!-- Audio Narration -->
+        <div class="audio-container" style="margin: 40px 0; text-align: center;">
+            <h2 style="margin-bottom: 20px;">🎙️  Listen to This Week's Digest</h2>
+            <div style="max-width: 800px; margin: 0 auto; padding: 30px; background: rgba(155, 89, 182, 0.1); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                <audio controls style="width: 100%; max-width: 600px; margin: 0 auto; display: block; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));">
+                    <source src="audio/narration_{date_str}.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                    AI-narrated summary of this week's agentic AI news
+                </p>
             </div>
-            <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
-                <a href="https://www.youtube.com/channel/UCUPSLoXvaMVbOIaXsOorHng" target="_blank" style="color: #9B59B6; text-decoration: none;">
-                    Subscribe to our channel →
-                </a>
-            </p>
         </div>
 
         <!-- Content Sections -->
@@ -455,7 +451,6 @@ class WebpageGenerator:
             <p>🔬 Curated from arXiv, Hacker News, and Reddit</p>
             <p>Automatically generated every Sunday at 6:00 PM</p>
             <p style="margin-top: 20px;">
-                <a href="https://www.youtube.com/channel/UCUPSLoXvaMVbOIaXsOorHng" target="_blank" style="margin-right: 20px;">📺 Watch on YouTube</a>
                 <a href="https://github.com/EiriniOr/ai-weekly-digest" target="_blank">View on GitHub</a>
             </p>
             <p style="margin-top: 30px; opacity: 0.6; font-size: 14px;">

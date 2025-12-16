@@ -1,9 +1,8 @@
-# AI Weekly Digest Generator 🤖📺
+# AI Weekly Digest Generator 🤖🎙️
 
-Automatically generates a **beautiful webpage** and **AI-narrated YouTube videos** every week with the latest updates in **Agentic AI** - autonomous agents, multi-agent systems, tool use, planning, and reasoning.
+Automatically generates a **beautiful webpage** with **AI-narrated audio** every week with the latest updates in **Agentic AI** - autonomous agents, multi-agent systems, tool use, planning, and reasoning.
 
 🌐 **Live Site**: https://EiriniOr.github.io/ai-weekly-digest/
-📺 **YouTube Channel**: https://www.youtube.com/channel/UCUPSLoXvaMVbOIaXsOorHng
 
 ## What It Does
 
@@ -12,9 +11,8 @@ Every Sunday at 6:00 PM UTC, this fully automated system:
 1. **Collects** AI news from multiple sources (arXiv, Hacker News, Reddit)
 2. **Curates** content using Claude to filter and categorize by relevance
 3. **Generates** a futuristic animated webpage with the top updates
-4. **Creates** AI-narrated YouTube videos with voice-over and animations
-5. **Uploads** videos automatically to YouTube
-6. **Deploys** everything to GitHub Pages
+4. **Creates** AI-narrated audio with OpenAI TTS
+5. **Deploys** everything to GitHub Pages
 
 ## Quick Start
 
@@ -22,8 +20,7 @@ Every Sunday at 6:00 PM UTC, this fully automated system:
 
 ```bash
 cd /Users/rena/ai-weekly-digest
-pip3 install anthropic pyyaml requests feedparser openai moviepy
-pip3 install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+pip3 install anthropic pyyaml requests feedparser openai
 ```
 
 **Note**: On macOS with Homebrew Python, you may need to use a virtual environment:
@@ -38,7 +35,6 @@ pip install -r requirements.txt
 You need API keys for:
 - **Anthropic Claude** (content curation)
 - **OpenAI** (AI voice narration)
-- **YouTube Data API** (video uploads) - See [YOUTUBE_API_SETUP.md](YOUTUBE_API_SETUP.md)
 
 ```bash
 export ANTHROPIC_API_KEY="your-anthropic-key"
