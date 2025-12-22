@@ -73,47 +73,50 @@ class ContentCurator:
             })
 
         # Create prompt for Claude
-        prompt = f"""You are curating a weekly digest focused on **agentic AI** - autonomous AI agents, multi-agent systems, tool use, planning, and reasoning.
+        prompt = f"""Curate weekly digest on agentic AI - autonomous agents, multi-agent systems, tool use, planning, reasoning.
 
 Focus topics: {', '.join(focus_topics)}
 
-I have {len(all_items)} items from this week. Please:
+{len(all_items)} items from this week. Tasks:
 
-1. Filter to the most relevant items about agentic AI and agent capabilities
-2. Categorize them into these sections:
+1. Filter most relevant items about agentic AI and agent capabilities
+2. Categorize into sections:
    - Key Research Papers (breakthroughs, novel architectures)
    - Industry Updates (product launches, company news)
-   - Tools & Frameworks (new agent frameworks, libraries)
+   - Tools & Frameworks (agent frameworks, libraries)
    - Notable Discussions (insights, debates, analyses)
 
-3. For each selected item, provide:
+3. For each item provide:
    - Section assignment
    - One-sentence insight (what makes it important/interesting)
    - Relevance score (1-10)
 
-4. Select the TOP items per section: {', '.join([f"{s['name']}: {s['max_items']}" for s in sections])}
+4. Select TOP items per section: {', '.join([f"{s['name']}: {s['max_items']}" for s in sections])}
 
-Here are the items:
+Items:
 
 {json.dumps(all_items, indent=2)}
 
-Return ONLY a valid JSON object with this structure:
+CRITICAL: Return ONLY valid JSON. No markdown, no code blocks, no explanatory text. Start with {{ and end with }}.
+
+Structure:
 {{
   "sections": {{
     "Key Research Papers": [
       {{"title": "...", "url": "...", "meta": "...", "insight": "...", "score": 9}}
     ],
-    "Industry Updates": [...],
-    "Tools & Frameworks": [...],
-    "Notable Discussions": [...]
+    "Industry Updates": [],
+    "Tools & Frameworks": [],
+    "Notable Discussions": []
   }},
-  "weekly_summary": "2-3 sentence summary of the week's major themes"
+  "weekly_summary": "2-3 sentence summary of week's major themes"
 }}"""
 
-        # Call Claude
+        # Call Claude with higher token limit for complete JSON
         message = self.client.messages.create(
             model=self.config['curation']['model'],
-            max_tokens=4000,
+            max_tokens=8000,
+            temperature=0.3,
             messages=[{"role": "user", "content": prompt}]
         )
 
@@ -121,10 +124,25 @@ Return ONLY a valid JSON object with this structure:
 
         # Parse JSON response
         try:
-            # Find JSON in response (in case Claude adds explanation)
-            json_start = response_text.find('{')
-            json_end = response_text.rfind('}') + 1
-            json_str = response_text[json_start:json_end]
+            # Remove markdown code blocks if present
+            json_str = response_text.strip()
+            if json_str.startswith('```json'):
+                json_str = json_str[7:]
+            elif json_str.startswith('```'):
+                json_str = json_str[3:]
+            if json_str.endswith('```'):
+                json_str = json_str[:-3]
+
+            json_str = json_str.strip()
+
+            # Find JSON bounds
+            json_start = json_str.find('{')
+            json_end = json_str.rfind('}') + 1
+
+            if json_start == -1 or json_end == 0:
+                raise ValueError("No valid JSON object found in response")
+
+            json_str = json_str[json_start:json_end]
 
             curated = json.loads(json_str)
         except json.JSONDecodeError as e:
