@@ -72,6 +72,9 @@ class ContentCurator:
                 'meta': f"r/{post['subreddit']} • {post['score']} upvotes • {post['comments']} comments"
             })
 
+        # Reduce items per section to avoid truncation
+        limited_sections = [{"name": s['name'], "max_items": min(5, s.get('max_items', 5))} for s in sections]
+
         # Create prompt for Claude
         prompt = f"""Curate weekly digest on agentic AI - autonomous agents, multi-agent systems, tool use, planning, reasoning.
 
@@ -91,7 +94,7 @@ Focus topics: {', '.join(focus_topics)}
    - One-sentence insight (what makes it important/interesting)
    - Relevance score (1-10)
 
-4. Select TOP items per section: {', '.join([f"{s['name']}: {s['max_items']}" for s in sections])}
+4. Select TOP items per section: {', '.join([f"{s['name']}: {s['max_items']}" for s in limited_sections])}
 
 Items:
 
