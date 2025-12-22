@@ -115,7 +115,7 @@ Structure:
         # Call Claude with higher token limit for complete JSON
         message = self.client.messages.create(
             model=self.config['curation']['model'],
-            max_tokens=8000,
+            max_tokens=16384,  # Increased for large JSON responses
             temperature=0.3,
             messages=[{"role": "user", "content": prompt}]
         )
