@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Weekly Digest - Agentic AI Updates</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(45deg, rgba(102, 126, 234, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(118, 75, 162, 0.05) 25%, transparent 25%);
+            background-size: 60px 60px;
+            animation: backgroundScroll 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes backgroundScroll {
+            0% {
+                background-position: 0 0, 0 0;
+            }
+            100% {
+                background-position: 60px 60px, -60px 60px;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+
+        .header .date {
+            font-size: 1rem;
+            color: #888;
+        }
+
+        /* Summary Section */
+        .summary {
+            background: rgba(74, 144, 226, 0.1);
+            border-left: 4px solid #4A90E2;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .summary h2 {
+            color: #4A90E2;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d0d0d0;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(30, 30, 50, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .section-items {
+            display: grid;
+            gap: 20px;
+        }
+
+        .content-item {
+            background: rgba(50, 50, 70, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .item-title {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .item-insight {
+            color: #c0c0c0;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .meta-source {
+            color: #888;
+        }
+
+        .item-link {
+            color: #4A90E2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .item-link:hover {
+            color: #667eea;
+        }
+
+        /* Archive Section */
+        .archive {
+            background: rgba(30, 30, 50, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .archive h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .archive-link {
+            text-decoration: none;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .archive-link:hover {
+            transform: translateX(5px);
+        }
+
+        .archive-item {
+            background: rgba(50, 50, 70, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 3px solid #667eea;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .archive-link .archive-item:hover {
+            background: rgba(70, 70, 90, 0.7);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .archive-item.current-week {
+            border-left: 3px solid #4A90E2;
+            cursor: default;
+        }
+
+        .archive-date {
+            color: #4A90E2;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .archive-summary {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .archive-stats {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #4A90E2;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content-item {
+                padding: 15px;
+            }
+
+            .item-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🤖 AI Weekly Digest</h1>
+            <p class="subtitle">Your curated agentic AI updates</p>
+            <p class="date">Week of January 04, 2026</p>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h2>📊 This Week's Highlights</h2>
+            <p>This week showcased significant advances in agent planning and reasoning capabilities, with breakthroughs in open-ended forecasting, LLM-driven heuristic search, and iterative deployment for skill improvement. Multi-agent collaboration emerged as a key theme across applications from meme analysis to humanoid robotics, while practical tools for agent feedback loops and system-level autonomy pushed the boundaries of where agents can operate. The research emphasizes moving beyond surface-level token processing toward deeper semantic reasoning and robust real-world deployment.</p>
+        </div>
+
+        <!-- Audio Narration -->
+        <div class="audio-container" style="margin: 40px 0; text-align: center;">
+            <h2 style="margin-bottom: 20px;">🎙️  Listen to This Week's Digest</h2>
+            <div style="max-width: 800px; margin: 0 auto; padding: 30px; background: rgba(155, 89, 182, 0.1); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                <audio controls style="width: 100%; max-width: 600px; margin: 0 auto; display: block; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));">
+                    <source src="audio/narration_20260104.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                    AI-narrated summary of this week's agentic AI news
+                </p>
+            </div>
+        </div>
+
+        <!-- Content Sections -->
+        
+            <section class="content-section" style="border-left: 4px solid #9B59B6">
+                <h2 class="section-title">🔬 Key Research Papers</h2>
+                <div class="section-items">
+                    
+                <div class="content-item">
+                    <h3 class="item-title">Scaling Open-Ended Reasoning to Predict the Future</h3>
+                    <p class="item-insight">Trains language models on open-ended forecasting questions to enable reasoning under uncertainty for high-stakes decision making, directly advancing agent planning capabilities.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Nikhil Chandak, Shashwat Goel, Ameya Prabhu</span>
+                        <a href="https://arxiv.org/abs/2512.25070v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Context-aware LLM-based AI Agents for Human-centered Energy Management Systems in Smart Buildings</h3>
+                    <p class="item-insight">Presents a conceptual framework for LLM-based BEMS agents that facilitate context-aware energy management, demonstrating practical autonomous agent deployment in real-world systems.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Tianzhi He, Farrokh Jazizadeh</span>
+                        <a href="https://arxiv.org/abs/2512.25055v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Vulcan: Instance-Optimal Systems Heuristics Through LLM-Driven Search</h3>
+                    <p class="item-insight">Uses LLMs to automatically discover optimal heuristics for resource management tasks like scheduling and caching, replacing hand-designed approaches with agent-driven search.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Rohit Dwivedula, Divyanshu Saxena, Sujay Yadalam</span>
+                        <a href="https://arxiv.org/abs/2512.25065v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">MAMA-Memeia! Multi-Aspect Multi-Agent Collaboration for Depressive Symptoms Identification in Memes</h3>
+                    <p class="item-insight">Demonstrates multi-agent collaboration architecture where specialized agents analyze different aspects of memes, showcasing coordinated multi-agent system design for complex reasoning tasks.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Siddhant Agarwal, Adya Dhuler, Polly Ruhnke</span>
+                        <a href="https://arxiv.org/abs/2512.25015v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Iterative Deployment Improves Planning Skills in LLMs</h3>
+                    <p class="item-insight">Shows that iterative deployment with user-curated feedback significantly improves LLM planning capabilities, providing a pathway for enhancing agent planning through real-world interaction.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Augusto B. Corrêa, Yoav Gelberg, Luckeciano C. Melo</span>
+                        <a href="https://arxiv.org/abs/2512.24940v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                </div>
+            </section>
+            
+            <section class="content-section" style="border-left: 4px solid #3498DB">
+                <h2 class="section-title">🏢 Industry Updates</h2>
+                <div class="section-items">
+                    
+                <div class="content-item">
+                    <h3 class="item-title">DarkEQA: Benchmarking Vision-Language Models for Embodied Question Answering in Low-Light Indoor Environments</h3>
+                    <p class="item-insight">Introduces benchmark for evaluating embodied agents under challenging real-world conditions, addressing critical gap in robust 24/7 agent deployment capabilities.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Yohan Park, Hyunwoo Ha, Wonjun Jo</span>
+                        <a href="https://arxiv.org/abs/2512.24985v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Coordinated Humanoid Manipulation with Choice Policies</h3>
+                    <p class="item-insight">Presents system for robust whole-body coordination in humanoid robots across head, hands, and legs, advancing embodied agent capabilities in human-centric environments.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Haozhi Qi, Yen-Jen Wang, Toru Lin</span>
+                        <a href="https://arxiv.org/abs/2512.25072v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">AdaGReS: Adaptive Greedy Context Selection via Redundancy-Aware Scoring for Token-Budgeted RAG</h3>
+                    <p class="item-insight">Improves RAG context selection by eliminating redundancy, directly enhancing agent memory systems and tool use efficiency under token budget constraints.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Chao Peng, Bin Wang, Zhilei Long</span>
+                        <a href="https://arxiv.org/abs/2512.25052v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Many Minds from One Model: Bayesian Transformers for Population Intelligence</h3>
+                    <p class="item-insight">Enables single model to represent multiple functional perspectives through Bayesian approach, offering new paradigm for multi-agent systems from unified architecture.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Diji Yang, Yi Zhang</span>
+                        <a href="https://arxiv.org/abs/2512.25063v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Modeling Language as a Sequence of Thoughts</h3>
+                    <p class="item-insight">Proposes modeling language beyond surface tokens to capture thought sequences, potentially improving agent reasoning by forming global semantic representations.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Nasim Borazjanizadeh, James McClelland</span>
+                        <a href="https://arxiv.org/abs/2512.25026v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                </div>
+            </section>
+            
+            <section class="content-section" style="border-left: 4px solid #1ABC9C">
+                <h2 class="section-title">🛠️ Tools & Frameworks</h2>
+                <div class="section-items">
+                    
+                <div class="content-item">
+                    <h3 class="item-title">Claude Reflect – Auto-turn Claude corrections into project config</h3>
+                    <p class="item-insight">Automatically converts Claude's corrections into project configuration, creating feedback loop that improves agent tool use and reduces repetitive corrections.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 Hacker News • 63 points • 22 comments</span>
+                        <a href="https://github.com/BayramAnnakov/claude-reflect" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Replacing my OS process scheduler with an LLM</h3>
+                    <p class="item-insight">Experimental framework using LLM for OS-level process scheduling decisions, pushing boundaries of agent autonomy into system-level resource management.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 Hacker News • 65 points • 34 comments</span>
+                        <a href="https://github.com/mprajyothreddy/brainkernel" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">CPJ: Explainable Agricultural Pest Diagnosis via Caption-Prompt-Judge with LLM-Judged Refinement</h3>
+                    <p class="item-insight">Introduces Caption-Prompt-Judge framework with LLM-based refinement for interpretable diagnosis, demonstrating agent reasoning pattern applicable to domain-specific decision tasks.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Wentao Zhang, Tao Fang, Lina Lu</span>
+                        <a href="https://arxiv.org/abs/2512.24947v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                <div class="content-item">
+                    <h3 class="item-title">Reliable and Resilient Collective Communication Library for LLM Training and Serving</h3>
+                    <p class="item-insight">Addresses network fault recovery in distributed LLM systems, critical infrastructure for scaling multi-agent systems across thousands of GPUs.</p>
+                    <div class="item-meta">
+                        <span class="meta-source">📍 arXiv • Wei Wang, Nengneng Yu, Sixian Xiong</span>
+                        <a href="https://arxiv.org/abs/2512.25059v1" target="_blank" class="item-link">🔗 Read more</a>
+                    </div>
+                </div>
+                
+                </div>
+            </section>
+            
+
+        <!-- Archive -->
+        <div class="archive">
+            <h2>📅 Recent Editions</h2>
+            
+                <div class="archive-item current-week">
+                    <div class="archive-date">January 04, 2026 (Current)</div>
+                    <div class="archive-summary">This week showcased significant advances in agent planning and reasoning capabilities, with breakthroughs in open-ended forecasting, LLM-driven heuris...</div>
+                    <div class="archive-stats">18 items</div>
+                </div>
+                
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🔬 Curated from arXiv, Hacker News, and Reddit</p>
+            <p>Automatically generated every Sunday at 6:00 PM</p>
+            <p style="margin-top: 20px;">
+                <a href="https://github.com/EiriniOr/ai-weekly-digest" target="_blank">View on GitHub</a>
+            </p>
+            <p style="margin-top: 30px; opacity: 0.6; font-size: 14px;">
+                Created by <a href="https://github.com/EiriniOr" target="_blank" style="color: #9B59B6; text-decoration: none;">Eirini Ornithopoulou</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
