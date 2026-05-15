@@ -3,456 +3,761 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 AI Weekly Digest - Agentic AI Updates</title>
+    <title>AI Weekly Digest — Agentic AI Updates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-0: #050018;
+            --bg-1: #0a0426;
+            --bg-2: #120538;
+            --neon-purple: #b16cff;
+            --neon-magenta: #ff4dd2;
+            --neon-cyan: #22d3ee;
+            --neon-blue: #4a7dff;
+            --text: #e7e6ff;
+            --text-dim: #9a98c8;
+            --text-muted: #6a679a;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #e0e0e0;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-0);
+            color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* Animated background pattern */
+        /* Galaxy background: layered radial nebulas */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(45deg, rgba(102, 126, 234, 0.05) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(118, 75, 162, 0.05) 25%, transparent 25%);
-            background-size: 60px 60px;
-            animation: backgroundScroll 20s linear infinite;
-            pointer-events: none;
-            z-index: -1;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 15% 10%, rgba(177, 108, 255, 0.22), transparent 60%),
+                radial-gradient(ellipse 70% 50% at 85% 20%, rgba(255, 77, 210, 0.18), transparent 60%),
+                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(34, 211, 238, 0.16), transparent 65%),
+                radial-gradient(ellipse 60% 60% at 80% 75%, rgba(74, 125, 255, 0.15), transparent 60%),
+                linear-gradient(180deg, #050018 0%, #0a0426 50%, #120538 100%);
+            z-index: -3;
+            animation: nebulaShift 30s ease-in-out infinite alternate;
         }
 
-        @keyframes backgroundScroll {
-            0% {
-                background-position: 0 0, 0 0;
-            }
-            100% {
-                background-position: 60px 60px, -60px 60px;
-            }
+        @keyframes nebulaShift {
+            0%   { filter: hue-rotate(0deg) saturate(1); }
+            100% { filter: hue-rotate(25deg) saturate(1.15); }
+        }
+
+        /* Star field (twinkling stars) */
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .stars::before, .stars::after {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background-image:
+                radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+                radial-gradient(1px 1px at 60px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 110px 20px, #b16cff, transparent),
+                radial-gradient(1.5px 1.5px at 160px 90px, #fff, transparent),
+                radial-gradient(1px 1px at 200px 50px, #22d3ee, transparent),
+                radial-gradient(1px 1px at 250px 10px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 300px 110px, #fff, transparent),
+                radial-gradient(1px 1px at 340px 60px, #ff4dd2, transparent),
+                radial-gradient(1px 1px at 380px 130px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 400px 200px;
+            animation: starDrift 120s linear infinite;
+            opacity: 0.6;
+        }
+
+        .stars::after {
+            background-size: 600px 300px;
+            animation: starDrift 200s linear infinite, twinkle 4s ease-in-out infinite alternate;
+            opacity: 0.4;
+        }
+
+        @keyframes starDrift {
+            from { transform: translate(0, 0); }
+            to   { transform: translate(-400px, -200px); }
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.2; }
+            to   { opacity: 0.7; }
+        }
+
+        /* Cursor-following glow */
+        .cursor-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(177, 108, 255, 0.12), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            mix-blend-mode: screen;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px 24px 60px;
+            position: relative;
         }
 
-        /* Header */
+        /* Compact header */
         .header {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
-            border-radius: 20px;
-            margin-bottom: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 26px;
+            background: linear-gradient(135deg, rgba(177, 108, 255, 0.08), rgba(34, 211, 238, 0.06));
+            border: 1px solid rgba(177, 108, 255, 0.25);
+            border-radius: 16px;
+            margin-bottom: 28px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 4px 30px rgba(177, 108, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+            animation: scanline 4s ease-in-out infinite;
+        }
+
+        @keyframes scanline {
+            0%, 100% { left: -100%; }
+            50%      { left: 100%; }
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta), var(--neon-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(177, 108, 255, 0.5);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-3px); }
         }
 
         .header h1 {
-            font-size: 3rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 1.35rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--neon-purple) 50%, var(--neon-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.01em;
+        }
+
+        .header .tagline {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 2px;
+        }
+
+        .header .date-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--neon-cyan);
+            padding: 6px 12px;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            border-radius: 999px;
+            background: rgba(34, 211, 238, 0.06);
+            white-space: nowrap;
+        }
+
+        /* Podcast hero — the centerpiece */
+        .podcast-hero {
+            position: relative;
+            padding: 36px 32px;
+            margin-bottom: 36px;
+            border-radius: 24px;
+            background:
+                radial-gradient(ellipse at top left, rgba(177, 108, 255, 0.25), transparent 60%),
+                radial-gradient(ellipse at bottom right, rgba(34, 211, 238, 0.2), transparent 60%),
+                rgba(10, 4, 38, 0.6);
+            border: 1px solid rgba(177, 108, 255, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow:
+                0 8px 40px rgba(177, 108, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .podcast-hero::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-magenta), var(--neon-cyan));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+            opacity: 0.4;
+            pointer-events: none;
+            animation: borderPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { opacity: 0.35; }
+            50%      { opacity: 0.7; }
+        }
+
+        .podcast-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--neon-magenta);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .live-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--neon-magenta);
+            box-shadow: 0 0 12px var(--neon-magenta);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .podcast-title {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.15;
             margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .header .subtitle {
-            font-size: 1.2rem;
-            color: #b0b0b0;
-            margin-bottom: 20px;
-        }
-
-        .header .date {
+        .podcast-sub {
+            color: var(--text-dim);
+            margin-bottom: 24px;
             font-size: 1rem;
-            color: #888;
+            max-width: 720px;
         }
 
-        /* Summary Section */
+        .audio-shell {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 14px 20px;
+            background: rgba(5, 0, 24, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            position: relative;
+        }
+
+        .visualizer {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .visualizer span {
+            display: block;
+            width: 3px;
+            background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 2px;
+            animation: bars 1.2s ease-in-out infinite;
+        }
+
+        .visualizer span:nth-child(1) { height: 50%; animation-delay: 0.0s; }
+        .visualizer span:nth-child(2) { height: 80%; animation-delay: 0.15s; }
+        .visualizer span:nth-child(3) { height: 35%; animation-delay: 0.3s; }
+        .visualizer span:nth-child(4) { height: 90%; animation-delay: 0.45s; }
+        .visualizer span:nth-child(5) { height: 60%; animation-delay: 0.6s; }
+
+        @keyframes bars {
+            0%, 100% { transform: scaleY(0.4); }
+            50%      { transform: scaleY(1); }
+        }
+
+        audio {
+            flex: 1;
+            min-width: 0;
+            height: 40px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: transparent;
+        }
+
+        /* Weekly summary */
         .summary {
-            background: rgba(74, 144, 226, 0.1);
-            border-left: 4px solid #4A90E2;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 40px;
+            padding: 22px 26px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            background: rgba(10, 4, 38, 0.5);
+            border: 1px solid rgba(74, 125, 255, 0.25);
+            border-left: 3px solid var(--neon-blue);
             backdrop-filter: blur(10px);
         }
 
         .summary h2 {
-            color: #4A90E2;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
+            font-size: 0.78rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-blue);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
         .summary p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #d0d0d0;
+            font-size: 1.02rem;
+            color: var(--text);
+            line-height: 1.7;
         }
 
-        /* Content Sections */
+        /* Content sections */
         .content-section {
-            background: rgba(30, 30, 50, 0.6);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 26px 28px;
+            border-radius: 18px;
+            margin-bottom: 24px;
+            background: rgba(10, 4, 38, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.4s, box-shadow 0.4s;
+        }
+
+        .content-section:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 40px var(--accent-glow);
         }
 
         .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 22px;
             color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        .section-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--accent);
+            font-size: 1.15rem;
+            box-shadow: 0 0 16px var(--accent-glow);
         }
 
         .section-items {
             display: grid;
-            gap: 20px;
+            gap: 14px;
         }
 
         .content-item {
-            background: rgba(50, 50, 70, 0.5);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            transition: transform 0.3s ease, background 0.3s, border-color 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+        }
+
+        .content-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .content-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--accent);
+            box-shadow: 0 8px 28px var(--accent-glow);
+        }
+
+        .content-item:hover::before {
+            opacity: 1;
         }
 
         .item-title {
+            font-size: 1.05rem;
+            font-weight: 600;
             color: #fff;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
         .item-insight {
-            color: #c0c0c0;
-            margin-bottom: 15px;
-            font-size: 1rem;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            line-height: 1.6;
         }
 
         .item-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
             flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .meta-source {
-            color: #888;
+            color: var(--text-muted);
         }
 
         .item-link {
-            color: #4A90E2;
+            color: var(--accent);
             text-decoration: none;
-            transition: color 0.3s;
+            transition: filter 0.2s, transform 0.2s;
         }
 
         .item-link:hover {
-            color: #667eea;
-        }
-
-        /* Archive Section */
-        .archive {
-            background: rgba(30, 30, 50, 0.6);
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 40px;
-            backdrop-filter: blur(10px);
-        }
-
-        .archive h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-
-        .archive-link {
-            text-decoration: none;
-            display: block;
-            transition: transform 0.3s;
-        }
-
-        .archive-link:hover {
-            transform: translateX(5px);
-        }
-
-        .archive-item {
-            background: rgba(50, 50, 70, 0.5);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 3px solid #667eea;
-            cursor: pointer;
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        .archive-link .archive-item:hover {
-            background: rgba(70, 70, 90, 0.7);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .archive-item.current-week {
-            border-left: 3px solid #4A90E2;
-            cursor: default;
-        }
-
-        .archive-date {
-            color: #4A90E2;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .archive-summary {
-            color: #b0b0b0;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-        }
-
-        .archive-stats {
-            color: #888;
-            font-size: 0.85rem;
+            filter: brightness(1.3);
+            transform: translateX(3px);
         }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 40px 20px;
-            color: #888;
-            margin-top: 60px;
+            padding: 40px 20px 10px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .footer a {
-            color: #667eea;
+            color: var(--neon-purple);
             text-decoration: none;
+            transition: color 0.2s;
         }
 
         .footer a:hover {
-            color: #4A90E2;
+            color: var(--neon-cyan);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
+        .footer p { margin-bottom: 6px; }
 
-            .content-item {
-                padding: 15px;
-            }
+        .footer .signature {
+            margin-top: 22px;
+            opacity: 0.6;
+            font-size: 0.78rem;
+        }
 
-            .item-meta {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        /* Reveal on scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 16px; }
+            .header { padding: 14px 18px; flex-wrap: wrap; }
+            .header h1 { font-size: 1.1rem; }
+            .podcast-hero { padding: 26px 22px; }
+            .podcast-title { font-size: 1.5rem; }
+            .audio-shell { flex-wrap: wrap; }
+            .cursor-glow { display: none; }
         }
     </style>
 </head>
 <body>
+    <div class="stars"></div>
+    <div class="cursor-glow"></div>
+
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>🤖 AI Weekly Digest</h1>
-            <p class="subtitle">Your curated agentic AI updates</p>
-            <p class="date">Week of December 15, 2025</p>
-        </div>
+        <header class="header">
+            <div class="brand">
+                <div class="brand-logo">🤖</div>
+                <div>
+                    <h1>AI Weekly Digest</h1>
+                    <div class="tagline">// agentic intelligence, every sunday</div>
+                </div>
+            </div>
+            <div class="date-badge">May 15, 2026</div>
+        </header>
 
-        <!-- Summary -->
-        <div class="summary">
-            <h2>📊 This Week's Highlights</h2>
+        <section class="podcast-hero reveal">
+            <div class="podcast-label"><span class="live-dot"></span>this week's broadcast</div>
+            <h2 class="podcast-title">🎙️ Listen to the Digest</h2>
+            <p class="podcast-sub">AI-narrated summary of the week's most important agentic AI developments — research, industry moves, and the tools shaping how machines reason.</p>
+            <div class="audio-shell">
+                <div class="visualizer" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <audio controls preload="metadata">
+                    <source src="audio/narration_20260510.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </section>
+
+        <section class="summary reveal">
+            <h2>// this week's highlights</h2>
             <p>This week highlighted the tension between advancing agent capabilities and real-world safety, with OpenAI introducing modular 'skills' and Claude CLI demonstrating both power and risks of autonomous tool use. Multi-agent research showed emergent behaviors in competitive scenarios while industry discussions questioned the gap between benchmark performance and economic impact, alongside growing concerns about agents replacing traditional SaaS paradigms.</p>
-        </div>
+        </section>
 
-        <!-- Content Sections -->
         
-            <section class="content-section" style="border-left: 4px solid #9B59B6">
-                <h2 class="section-title">🔬 Key Research Papers</h2>
+            <section class="content-section" style="--accent: #b16cff; --accent-glow: rgba(177, 108, 255, 0.45);">
+                <h2 class="section-title"><span class="section-icon">🔬</span>Key Research Papers</h2>
                 <div class="section-items">
                     
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">Agile Flight Emerges from Multi-Agent Competitive Racing</h3>
                     <p class="item-insight">Demonstrates emergent agile behavior and strategic reasoning in multi-agent competitive environments through sparse reward signals alone, pushing autonomous agents to physical performance limits.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 arXiv • Vineet Pasumarti, Lorenzo Bianchi, Antonio Loquercio</span>
-                        <a href="https://arxiv.org/abs/2512.11781v1" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">arXiv • Vineet Pasumarti, Lorenzo Bianchi, Antonio Loquercio</span>
+                        <a href="https://arxiv.org/abs/2512.11781v1" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">MedAI: Evaluating TxAgent's Therapeutic Agentic Reasoning in the NeurIPS CURE-Bench Competition</h3>
                     <p class="item-insight">Introduces TxAgent for high-stakes therapeutic decision-making, showcasing domain-specific agentic reasoning capabilities in complex medical contexts with multi-factor interactions.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 arXiv • Tim Cofala, Christian Kalfar, Jingge Xiao</span>
-                        <a href="https://arxiv.org/abs/2512.11682v1" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">arXiv • Tim Cofala, Christian Kalfar, Jingge Xiao</span>
+                        <a href="https://arxiv.org/abs/2512.11682v1" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">Bounding Hallucinations: Information-Theoretic Guarantees for RAG Systems via Merlin-Arthur Protocols</h3>
                     <p class="item-insight">Provides formal verification framework for RAG agent systems, transforming retrieval from weak heuristic to verifiable evidence with information-theoretic guarantees against hallucination.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 arXiv • Björn Deiseroth, Max Henning Höth, Kristian Kersting</span>
-                        <a href="https://arxiv.org/abs/2512.11614v1" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">arXiv • Björn Deiseroth, Max Henning Höth, Kristian Kersting</span>
+                        <a href="https://arxiv.org/abs/2512.11614v1" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">LUCID: Learning-Enabled Uncertainty-Aware Certification of Stochastic Dynamical Systems</h3>
                     <p class="item-insight">Advances safety verification for AI-enabled autonomous systems by addressing formal certification challenges in high-stakes domains like autonomous driving through uncertainty-aware methods.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 arXiv • Ernesto Casablanca, Oliver Schön, Paolo Zuliani</span>
-                        <a href="https://arxiv.org/abs/2512.11750v1" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">arXiv • Ernesto Casablanca, Oliver Schön, Paolo Zuliani</span>
+                        <a href="https://arxiv.org/abs/2512.11750v1" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">From Verification Burden to Trusted Collaboration: Design Goals for LLM-Assisted Literature Reviews</h3>
                     <p class="item-insight">Explores human-AI collaboration dynamics in research workflows, identifying key design principles for LLM agents to transition from verification burden to trusted research assistants.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 arXiv • Brenda Nogueira, Werner Geyer, Andrew Anderson</span>
-                        <a href="https://arxiv.org/abs/2512.11661v1" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">arXiv • Brenda Nogueira, Werner Geyer, Andrew Anderson</span>
+                        <a href="https://arxiv.org/abs/2512.11661v1" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
                 </div>
             </section>
             
-            <section class="content-section" style="border-left: 4px solid #3498DB">
-                <h2 class="section-title">🏢 Industry Updates</h2>
+            <section class="content-section" style="--accent: #22d3ee; --accent-glow: rgba(34, 211, 238, 0.45);">
+                <h2 class="section-title"><span class="section-icon">🏢</span>Industry Updates</h2>
                 <div class="section-items">
                     
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">AI agents are starting to eat SaaS</h3>
                     <p class="item-insight">Analyzes the fundamental shift where autonomous AI agents are beginning to replace traditional SaaS products, signaling a major transformation in enterprise software economics.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 Hacker News • 125 points • 146 comments</span>
-                        <a href="https://martinalderson.com/posts/ai-agents-are-starting-to-eat-saas/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">Hacker News • 125 points • 146 comments</span>
+                        <a href="https://martinalderson.com/posts/ai-agents-are-starting-to-eat-saas/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">OpenAI are quietly adopting skills, now available in ChatGPT and Codex CLI</h3>
                     <p class="item-insight">OpenAI introduces 'skills' feature that extends agent capabilities with reusable tool-use patterns, marking a significant architecture evolution toward more modular agentic systems.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 Hacker News • 568 points • 314 comments</span>
-                        <a href="https://simonwillison.net/2025/Dec/12/openai-skills/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">Hacker News • 568 points • 314 comments</span>
+                        <a href="https://simonwillison.net/2025/Dec/12/openai-skills/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">Claude CLI deleted my home directory and wiped my Mac</h3>
                     <p class="item-insight">Critical real-world incident highlighting safety challenges in autonomous tool-using agents with filesystem access, raising urgent questions about agent safeguards and permission systems.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 Hacker News • 221 points • 183 comments</span>
-                        <a href="https://old.reddit.com/r/ClaudeAI/comments/1pgxckk/claude_cli_deleted_my_entire_home_directory_wiped/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">Hacker News • 221 points • 183 comments</span>
+                        <a href="https://old.reddit.com/r/ClaudeAI/comments/1pgxckk/claude_cli_deleted_my_entire_home_directory_wiped/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">An AI agent spent 16 hours hacking Stanford's network. It outperformed human pros for much less than their 6-figure salaries.</h3>
                     <p class="item-insight">Demonstrates autonomous penetration testing agents achieving professional-grade results, showing practical economic viability of specialized security agents for complex multi-step tasks.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 r/artificial • 207 upvotes • 32 comments</span>
-                        <a href="https://reddit.com/r/artificial/comments/1pkuaaq/an_ai_agent_spent_16_hours_hacking_stanfords/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">r/artificial • 207 upvotes • 32 comments</span>
+                        <a href="https://reddit.com/r/artificial/comments/1pkuaaq/an_ai_agent_spent_16_hours_hacking_stanfords/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">Introducing: Devstral 2 and Mistral Vibe CLI</h3>
                     <p class="item-insight">Mistral releases specialized coding agent with CLI interface, continuing the trend of domain-specific agentic tools for autonomous development workflows.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 r/LocalLLaMA • 686 upvotes • 218 comments</span>
-                        <a href="https://reddit.com/r/LocalLLaMA/comments/1pi9q3t/introducing_devstral_2_and_mistral_vibe_cli/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">r/LocalLLaMA • 686 upvotes • 218 comments</span>
+                        <a href="https://reddit.com/r/LocalLLaMA/comments/1pi9q3t/introducing_devstral_2_and_mistral_vibe_cli/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
                 </div>
             </section>
             
-            <section class="content-section" style="border-left: 4px solid #1ABC9C">
-                <h2 class="section-title">🛠️ Tools & Frameworks</h2>
+            <section class="content-section" style="--accent: #34d399; --accent-glow: rgba(52, 211, 153, 0.45);">
+                <h2 class="section-title"><span class="section-icon">🛠️</span>Tools & Frameworks</h2>
                 <div class="section-items">
                     
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">OpenAI Skills (via Simon Willison analysis)</h3>
                     <p class="item-insight">New composable framework for building reusable agent capabilities in ChatGPT and CLI tools, enabling more sophisticated tool-use patterns and agent workflows.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 Hacker News • 568 points • 314 comments</span>
-                        <a href="https://simonwillison.net/2025/Dec/12/openai-skills/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">Hacker News • 568 points • 314 comments</span>
+                        <a href="https://simonwillison.net/2025/Dec/12/openai-skills/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">Mistral Vibe CLI</h3>
                     <p class="item-insight">Command-line interface for autonomous coding workflows with Devstral 2, providing developers with local agentic development assistant capabilities.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 r/LocalLLaMA • 686 upvotes • 218 comments</span>
-                        <a href="https://reddit.com/r/LocalLLaMA/comments/1pi9q3t/introducing_devstral_2_and_mistral_vibe_cli/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">r/LocalLLaMA • 686 upvotes • 218 comments</span>
+                        <a href="https://reddit.com/r/LocalLLaMA/comments/1pi9q3t/introducing_devstral_2_and_mistral_vibe_cli/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">Claude CLI (incident context)</h3>
                     <p class="item-insight">Production CLI agent framework with system-level tool access, highlighting both the power and critical safety considerations needed for autonomous filesystem agents.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 Hacker News • 221 points • 183 comments</span>
-                        <a href="https://old.reddit.com/r/ClaudeAI/comments/1pgxckk/claude_cli_deleted_my_entire_home_directory_wiped/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">Hacker News • 221 points • 183 comments</span>
+                        <a href="https://old.reddit.com/r/ClaudeAI/comments/1pgxckk/claude_cli_deleted_my_entire_home_directory_wiped/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
-                <div class="content-item">
+                <article class="content-item">
                     <h3 class="item-title">3x Faster LLM Training with 30% Less Memory</h3>
                     <p class="item-insight">New training optimization enabling sub-4GB VRAM agent model training, democratizing development of custom autonomous agents on consumer hardware.</p>
                     <div class="item-meta">
-                        <span class="meta-source">📍 r/LocalLLaMA • 1029 upvotes • 114 comments</span>
-                        <a href="https://reddit.com/r/LocalLLaMA/comments/1pj51tu/you_can_now_train_llms_3x_faster_with_30_less/" target="_blank" class="item-link">🔗 Read more</a>
+                        <span class="meta-source">r/LocalLLaMA • 1029 upvotes • 114 comments</span>
+                        <a href="https://reddit.com/r/LocalLLaMA/comments/1pj51tu/you_can_now_train_llms_3x_faster_with_30_less/" target="_blank" class="item-link">read more →</a>
                     </div>
-                </div>
+                </article>
                 
                 </div>
             </section>
             
 
-        <!-- Archive -->
-        <div class="archive">
-            <h2>📅 Recent Editions</h2>
-            
-                <div class="archive-item current-week">
-                    <div class="archive-date">December 15, 2025 (Current)</div>
-                    <div class="archive-summary">This week highlighted the tension between advancing agent capabilities and real-world safety, with OpenAI introducing modular 'skills' and Claude CLI ...</div>
-                    <div class="archive-stats">18 items</div>
-                </div>
-                
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>🔬 Curated from arXiv, Hacker News, and Reddit</p>
-            <p>Automatically generated every Sunday at 6:00 PM</p>
-            <p style="margin-top: 20px;">
-                <a href="https://github.com/EiriniOr/ai-weekly-digest" target="_blank">View on GitHub</a>
-            </p>
-        </div>
+        <footer class="footer">
+            <p>// curated from arXiv · Hacker News · Reddit</p>
+            <p>auto-generated every sunday at 18:00</p>
+            <p style="margin-top: 16px;"><a href="https://github.com/EiriniOr/ai-weekly-digest" target="_blank">view on github</a></p>
+            <p class="signature">crafted by <a href="https://github.com/EiriniOr" target="_blank">Eirini Ornithopoulou</a></p>
+        </footer>
     </div>
+
+    <script>
+        // Cursor-following glow
+        const glow = document.querySelector('.cursor-glow');
+        let glowX = window.innerWidth / 2, glowY = window.innerHeight / 2;
+        let targetX = glowX, targetY = glowY;
+
+        document.addEventListener('mousemove', (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+        });
+
+        function animateGlow() {
+            glowX += (targetX - glowX) * 0.1;
+            glowY += (targetY - glowY) * 0.1;
+            glow.style.left = glowX + 'px';
+            glow.style.top  = glowY + 'px';
+            requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+
+        // Reveal on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.content-section, .summary, .podcast-hero').forEach((el) => {
+            el.classList.add('reveal');
+            observer.observe(el);
+        });
+
+        // Reveal first elements immediately
+        setTimeout(() => {
+            document.querySelectorAll('.podcast-hero, .summary').forEach((el) => el.classList.add('visible'));
+        }, 100);
+    </script>
 </body>
 </html>
