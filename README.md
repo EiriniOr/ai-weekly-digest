@@ -1,5 +1,7 @@
 # AI Weekly Digest Generator 🤖🎙️
 
+> 📁 Part of my portfolio: [see this project and more →](https://eirini-portfolio-aer3.vercel.app/?utm_source=github&utm_medium=readme&utm_campaign=ai-weekly-digest#story/automated-weekly-digest-systems)
+
 Automatically generates a **beautiful webpage** with **AI-narrated audio** every week with the latest updates in **Agentic AI** - autonomous agents, multi-agent systems, tool use, planning, and reasoning.
 
 🌐 **Live Site**: https://EiriniOr.github.io/ai-weekly-digest/
